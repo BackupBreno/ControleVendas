@@ -484,7 +484,7 @@
      <number>99999</number>
     </property>
    </widget>
-   <widget class="QLabel" name="produtoExcluirFeedback">
+   <widget class="QLabel" name="produto_excluir_feedback">
     <property name="geometry">
      <rect>
       <x>380</x>
@@ -1146,7 +1146,7 @@
      <string>Descrição</string>
     </property>
    </widget>
-   <widget class="QSpinBox" name="produtoExcluirCod">
+   <widget class="QSpinBox" name="produto_excluir_cod">
     <property name="geometry">
      <rect>
       <x>470</x>
@@ -1195,7 +1195,7 @@
      </rect>
     </property>
    </widget>
-   <widget class="QPushButton" name="produtoExcluir">
+   <widget class="QPushButton" name="produto_excluit_excluirButton">
     <property name="geometry">
      <rect>
       <x>410</x>

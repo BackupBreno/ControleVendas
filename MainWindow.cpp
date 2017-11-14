@@ -1,6 +1,15 @@
 #include "MainWindow.h"
 #include "ui_MainWindow.h"
 
+/*
+ * TODO:
+ *  >> Produtos <<
+ * -> Utilizar o throw quando tiver ocorrido erro na transação do SQL.
+ * -> Ajustar o feedback no caso de erro.
+ *
+ *  >> Clientes <<
+ */
+
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow)
@@ -80,4 +89,22 @@ void MainWindow::on_produto_consulta_consultarButton_clicked()
     ui->produto_consulta_valVenda->setText(queryModel->query().value(3).toString());
     ui->produto_consulta_estoque->setText(queryModel->query().value(4).toString());
     ui->produto_consulta_estMin->setText(queryModel->query().value(5).toString());
+}
+
+void MainWindow::on_produto_excluit_excluirButton_clicked()
+{
+    int cod = ui->produto_excluir_cod->value();
+
+    QString sqlCommand = "DELETE FROM produtos WHERE codigo = ";
+    sqlCommand += QString().setNum(cod);
+
+    db.open();
+
+    queryModel->setQuery(sqlCommand);
+
+    std::cout << queryModel->query().lastError().text().toStdString() << std::endl;
+
+    db.close();
+
+    ui->produto_excluir_feedback->setText("Produto excluido.");
 }

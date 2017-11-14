@@ -23,6 +23,8 @@ private slots:
 
     void on_produto_consulta_consultarButton_clicked();
 
+    void on_produto_excluit_excluirButton_clicked();
+
 private:
     Ui::MainWindow *ui;
 
