@@ -79,7 +79,7 @@
      <string>Consultar</string>
     </property>
    </widget>
-   <widget class="QLineEdit" name="produtoAlterarDescricao">
+   <widget class="QLineEdit" name="produto_alterar_descricao">
     <property name="enabled">
      <bool>false</bool>
     </property>
@@ -351,7 +351,7 @@
      <string>Cadastrar</string>
     </property>
    </widget>
-   <widget class="QDoubleSpinBox" name="produtoAlterarValorcompra">
+   <widget class="QDoubleSpinBox" name="produto_alterar_valCompra">
     <property name="enabled">
      <bool>false</bool>
     </property>
@@ -536,7 +536,7 @@
      <string>Telefone</string>
     </property>
    </widget>
-   <widget class="QSpinBox" name="produtoAlterarQtdEstoque">
+   <widget class="QSpinBox" name="produto_alterar_estoque">
     <property name="enabled">
      <bool>false</bool>
     </property>
@@ -825,7 +825,7 @@
      <string/>
     </property>
    </widget>
-   <widget class="QDoubleSpinBox" name="produtoAlterarValorVenda">
+   <widget class="QDoubleSpinBox" name="produto_alterar_valVenda">
     <property name="enabled">
      <bool>false</bool>
     </property>
@@ -914,7 +914,7 @@
      <string>Cadastrar</string>
     </property>
    </widget>
-   <widget class="QSpinBox" name="produtoAlterarEstoqueMin">
+   <widget class="QSpinBox" name="produto_alterar_estMin">
     <property name="enabled">
      <bool>false</bool>
     </property>
@@ -1013,7 +1013,7 @@
      <string>Telefone</string>
     </property>
    </widget>
-   <widget class="QPushButton" name="produtoAlterarConsultar">
+   <widget class="QPushButton" name="produto_alterar_consultarButton">
     <property name="geometry">
      <rect>
       <x>590</x>
@@ -1091,7 +1091,7 @@
      <string>Valor Venda</string>
     </property>
    </widget>
-   <widget class="QPushButton" name="produtoAlterar">
+   <widget class="QPushButton" name="produto_alterar_alterarButton">
     <property name="enabled">
      <bool>false</bool>
     </property>
@@ -1409,7 +1409,7 @@
      <string>À Vista</string>
     </property>
    </widget>
-   <widget class="QSpinBox" name="produtoAlterarCod">
+   <widget class="QSpinBox" name="produto_alterar_cod">
     <property name="geometry">
      <rect>
       <x>650</x>
