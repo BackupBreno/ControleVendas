@@ -27,7 +27,7 @@
      <string>Código do Cliente:</string>
     </property>
    </widget>
-   <widget class="QSpinBox" name="clienteConsultaCod">
+   <widget class="QSpinBox" name="cliente_consulta_cod">
     <property name="geometry">
      <rect>
       <x>280</x>
@@ -66,7 +66,7 @@
      <enum>Qt::Horizontal</enum>
     </property>
    </widget>
-   <widget class="QPushButton" name="clienteConsultar">
+   <widget class="QPushButton" name="cliente_consulta_consultarButton">
     <property name="geometry">
      <rect>
       <x>230</x>
@@ -427,7 +427,7 @@
      <string>Menu de Clientes</string>
     </property>
    </widget>
-   <widget class="QLabel" name="clienteCadastroLabel">
+   <widget class="QLabel" name="cliente_cadastro_feedback">
     <property name="geometry">
      <rect>
       <x>20</x>
@@ -523,7 +523,7 @@
      <string>A Prazo</string>
     </property>
    </widget>
-   <widget class="QLabel" name="clienteConsultaTelefone">
+   <widget class="QLabel" name="cliente_consulta_telefone">
     <property name="geometry">
      <rect>
       <x>200</x>
@@ -596,7 +596,7 @@
      <string>Estoque:</string>
     </property>
    </widget>
-   <widget class="QLabel" name="clienteConsultaNome">
+   <widget class="QLabel" name="cliente_consulta_nome">
     <property name="geometry">
      <rect>
       <x>200</x>
@@ -726,7 +726,7 @@
      <string>ValorVenda:</string>
     </property>
    </widget>
-   <widget class="QLabel" name="clienteConsultaEndereco">
+   <widget class="QLabel" name="cliente_consulta_endereco">
     <property name="geometry">
      <rect>
       <x>200</x>
@@ -812,7 +812,7 @@
      <string>Consultar</string>
     </property>
    </widget>
-   <widget class="QLabel" name="clienteExcluirFeedback">
+   <widget class="QLabel" name="cliente_excluir_feedback">
     <property name="geometry">
      <rect>
       <x>380</x>
@@ -901,7 +901,7 @@
      <enum>Qt::Horizontal</enum>
     </property>
    </widget>
-   <widget class="QPushButton" name="clienteCadastrar">
+   <widget class="QPushButton" name="cliente_cadastro_cadastrarButton">
     <property name="geometry">
      <rect>
       <x>50</x>
@@ -969,7 +969,7 @@
      <enum>Qt::Horizontal</enum>
     </property>
    </widget>
-   <widget class="QLineEdit" name="clienteCadastroNome">
+   <widget class="QLineEdit" name="cliente_cadastro_nome">
     <property name="geometry">
      <rect>
       <x>20</x>
@@ -1000,7 +1000,7 @@
      <string>Numero de Vendas de:</string>
     </property>
    </widget>
-   <widget class="QLineEdit" name="clienteCadastroTelefone">
+   <widget class="QLineEdit" name="cliente_cadastro_telefone">
     <property name="geometry">
      <rect>
       <x>20</x>
@@ -1107,7 +1107,7 @@
      <string>Alterar</string>
     </property>
    </widget>
-   <widget class="QLineEdit" name="clienteCadastroEndereco">
+   <widget class="QLineEdit" name="cliente_cadastro_endereco">
     <property name="geometry">
      <rect>
       <x>20</x>
@@ -1341,7 +1341,7 @@
      <string/>
     </property>
    </widget>
-   <widget class="QPushButton" name="clienteExcluir">
+   <widget class="QPushButton" name="cliente_excluir_excluirButton">
     <property name="geometry">
      <rect>
       <x>410</x>
@@ -1354,7 +1354,7 @@
      <string>Excluir</string>
     </property>
    </widget>
-   <widget class="QSpinBox" name="clienteExcluirCod">
+   <widget class="QSpinBox" name="cliente_excluir_cod">
     <property name="geometry">
      <rect>
       <x>460</x>

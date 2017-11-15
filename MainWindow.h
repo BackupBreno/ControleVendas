@@ -34,6 +34,18 @@ private slots:
 
     void on_produto_alterar_alterarButton_clicked();
 
+    void enableClienteAlterar();
+
+    void disableClienteAlterar();
+
+    void on_cliente_cadastro_cadastrarButton_clicked();
+
+    void on_cliente_consulta_consultarButton_clicked();
+
+    void on_cliente_excluir_excluirButton_clicked();
+
+    void on_clienteAlterarConsultar_clicked();
+
 private:
     Ui::MainWindow *ui;
 

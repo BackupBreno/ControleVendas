@@ -32,7 +32,6 @@ MainWindow::~MainWindow()
 }
 
 // Produto
-
 void MainWindow::enableProdutoAlterar()
 {
     ui->produto_alterar_cod->setEnabled(false);
@@ -96,6 +95,12 @@ void MainWindow::on_produto_cadastro_cadastrarButton_clicked()
         std::cout << queryModel->query().lastError().text().toStdString() << std::endl;
 
         db.close();
+
+        ui->produto_cadastro_feedback->setText("Codigo: " + QString().setNum(cod));
+    }
+    else
+    {
+        ui->produto_cadastro_feedback->setText("Descrição invalida.");
     }
 }
 
@@ -238,3 +243,82 @@ void MainWindow::on_produto_alterar_alterarButton_clicked()
 
 }
 
+// Cliente
+void MainWindow::on_cliente_cadastro_cadastrarButton_clicked()
+{
+    int cod = 10;
+
+    QString nome = ui->cliente_cadastro_nome->text();
+
+    QString endereco = ui->cliente_cadastro_endereco->text();
+
+    QString telefone = ui->cliente_cadastro_telefone->text();
+
+    if (nome.length() > 0 && endereco.length() > 0)
+    {
+        QString sqlCommand = "INSERT INTO clientes VALUES (";
+        sqlCommand += QString().setNum(cod) + ", ";
+        sqlCommand += "\"" + nome + "\", ";
+        sqlCommand += "\"" + endereco + "\", ";;
+        sqlCommand += "\"" + telefone + "\")";
+
+        db.open();
+
+        queryModel->setQuery(sqlCommand);
+
+        std::cout << queryModel->query().lastError().text().toStdString() << std::endl;
+
+        db.close();
+
+        ui->cliente_cadastro_feedback->setText("Codigo: " + QString().setNum(cod));
+    }
+    else
+    {
+        ui->cliente_cadastro_feedback->setText("Dados invalidos.");
+    }
+}
+
+void MainWindow::on_cliente_consulta_consultarButton_clicked()
+{
+    int cod = ui->cliente_consulta_cod->value();
+
+    QString sqlCommand = "SELECT * FROM clientes WHERE codigo = ";
+    sqlCommand += QString().setNum(cod);
+
+    db.open();
+
+    queryModel->setQuery(sqlCommand);
+
+    std::cout << queryModel->query().lastError().text().toStdString() << std::endl;
+
+    db.close();
+
+    queryModel->query().next();
+
+    ui->cliente_consulta_nome->setText(queryModel->query().value(1).toString());
+    ui->cliente_consulta_endereco->setText(queryModel->query().value(2).toString());
+    ui->cliente_consulta_telefone->setText(queryModel->query().value(3).toString());
+}
+
+void MainWindow::on_cliente_excluir_excluirButton_clicked()
+{
+    int cod = ui->cliente_excluir_cod->value();
+
+    QString sqlCommand = "DELETE FROM clientes WHERE codigo = ";
+    sqlCommand += QString().setNum(cod);
+
+    db.open();
+
+    queryModel->setQuery(sqlCommand);
+
+    std::cout << queryModel->query().lastError().text().toStdString() << std::endl;
+
+    db.close();
+
+    ui->cliente_excluir_feedback->setText("Cliente excluido.");
+}
+
+void MainWindow::on_clienteAlterarConsultar_clicked()
+{
+
+}
