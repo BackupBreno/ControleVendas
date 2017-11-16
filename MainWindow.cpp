@@ -66,6 +66,8 @@ void MainWindow::disableProdutoAlterar()
 
 void MainWindow::on_produto_cadastro_cadastrarButton_clicked()
 {
+    std::cout << "P C" << std::endl;
+
     QString descricao = ui->produto_cadastro_descricao->text();
 
     if (descricao.length() <= 30 && descricao.length() > 0)
@@ -106,6 +108,8 @@ void MainWindow::on_produto_cadastro_cadastrarButton_clicked()
 
 void MainWindow::on_produto_consulta_consultarButton_clicked()
 {
+    std::cout << "P CS" << std::endl;
+
     int cod = ui->produto_consulta_cod->value();
 
     QString sqlCommand = "SELECT * FROM produtos WHERE codigo = ";
@@ -130,6 +134,8 @@ void MainWindow::on_produto_consulta_consultarButton_clicked()
 
 void MainWindow::on_produto_excluit_excluirButton_clicked()
 {
+    std::cout << "P X" << std::endl;
+
     int cod = ui->produto_excluir_cod->value();
 
     QString sqlCommand = "DELETE FROM produtos WHERE codigo = ";
@@ -148,6 +154,8 @@ void MainWindow::on_produto_excluit_excluirButton_clicked()
 
 void MainWindow::on_produto_alterar_consultarButton_clicked()
 {
+    std::cout << "P A CS" << std::endl;
+
     int cod = ui->produto_alterar_cod->value();
 
     QString sqlCommand = "SELECT * FROM produtos WHERE codigo = ";
@@ -174,6 +182,9 @@ void MainWindow::on_produto_alterar_consultarButton_clicked()
 
 void MainWindow::on_produto_alterar_alterarButton_clicked()
 {
+
+    std::cout << "P A A" << std::endl;
+
     QString descricao = ui->produto_alterar_descricao->text();
 
     if (descricao.length() <= 30 && descricao.length() > 0)
@@ -240,12 +251,39 @@ void MainWindow::on_produto_alterar_alterarButton_clicked()
 
         disableProdutoAlterar();
     }
-
 }
 
 // Cliente
+void MainWindow::enableClienteAlterar()
+{
+    ui->cliente_alterar_cod->setEnabled(false);
+    ui->cliente_alterar_consultarButton->setEnabled(false);
+
+    ui->cliente_alterar_nome->setEnabled(true);
+    ui->cliente_alterar_endereco->setEnabled(true);
+    ui->cliente_alterar_telefone->setEnabled(true);
+    ui->cliente_alterar_alterarButton->setEnabled(true);
+}
+
+void MainWindow::disableClienteAlterar()
+{
+    ui->cliente_alterar_cod->setEnabled(true);
+    ui->cliente_alterar_consultarButton->setEnabled(true);
+
+    ui->cliente_alterar_nome->setEnabled(false);
+    ui->cliente_alterar_endereco->setEnabled(false);
+    ui->cliente_alterar_telefone->setEnabled(false);
+    ui->cliente_alterar_alterarButton->setEnabled(false);
+
+    ui->cliente_alterar_nome->setText("");
+    ui->cliente_alterar_endereco->setText("");
+    ui->cliente_alterar_telefone->setText("");
+}
+
 void MainWindow::on_cliente_cadastro_cadastrarButton_clicked()
 {
+    std::cout << "C C" << std::endl;
+
     int cod = 10;
 
     QString nome = ui->cliente_cadastro_nome->text();
@@ -280,6 +318,8 @@ void MainWindow::on_cliente_cadastro_cadastrarButton_clicked()
 
 void MainWindow::on_cliente_consulta_consultarButton_clicked()
 {
+    std::cout << "C CS" << std::endl;
+
     int cod = ui->cliente_consulta_cod->value();
 
     QString sqlCommand = "SELECT * FROM clientes WHERE codigo = ";
@@ -302,6 +342,8 @@ void MainWindow::on_cliente_consulta_consultarButton_clicked()
 
 void MainWindow::on_cliente_excluir_excluirButton_clicked()
 {
+    std::cout << "C X" << std::endl;
+
     int cod = ui->cliente_excluir_cod->value();
 
     QString sqlCommand = "DELETE FROM clientes WHERE codigo = ";
@@ -318,7 +360,76 @@ void MainWindow::on_cliente_excluir_excluirButton_clicked()
     ui->cliente_excluir_feedback->setText("Cliente excluido.");
 }
 
-void MainWindow::on_clienteAlterarConsultar_clicked()
+void MainWindow::on_cliente_alterar_consultarButton_clicked()
 {
+    std::cout << "C A CS" << std::endl;
 
+    int cod = ui->cliente_alterar_cod->value();
+
+    QString sqlCommand = "SELECT * FROM clientes WHERE codigo = ";
+    sqlCommand += QString().setNum(cod);
+
+    db.open();
+
+    queryModel->setQuery(sqlCommand);
+
+    std::cout << queryModel->query().lastError().text().toStdString() << std::endl;
+
+    db.close();
+
+    queryModel->query().next();
+
+    ui->cliente_alterar_nome->setText(queryModel->query().value(1).toString());
+    ui->cliente_alterar_endereco->setText(queryModel->query().value(2).toString());
+    ui->cliente_alterar_telefone->setText(queryModel->query().value(3).toString());
+
+    enableClienteAlterar();
+}
+
+void MainWindow::on_cliente_alterar_alterarButton_clicked()
+{
+    std::cout << "C A A" << std::endl;
+
+    QString nome = ui->cliente_alterar_nome->text();
+
+    QString endereco = ui->cliente_alterar_endereco->text();
+
+    QString telefone = ui->cliente_alterar_telefone->text();
+
+    if (nome.length() > 0 && endereco.length() > 0)
+    {
+        int cod = ui->cliente_alterar_cod->value();
+
+        QString sqlCommand = "UPDATE clientes SET nome = ";
+        sqlCommand += "\"" + nome + "\"";
+        sqlCommand += " WHERE codigo = ";
+        sqlCommand += QString().setNum(cod);
+
+        db.open();
+        queryModel->setQuery(sqlCommand);
+        std::cout << queryModel->query().lastError().text().toStdString() << std::endl;
+        db.close();
+
+        sqlCommand = "UPDATE clientes SET endereco = ";
+        sqlCommand += "\"" + endereco + "\"";
+        sqlCommand += " WHERE codigo = ";
+        sqlCommand += QString().setNum(cod);
+
+        db.open();
+        queryModel->setQuery(sqlCommand);
+        std::cout << queryModel->query().lastError().text().toStdString() << std::endl;
+        db.close();
+
+        sqlCommand = "UPDATE clientes SET telefone = ";
+        sqlCommand += "\"" + telefone + "\"";
+        sqlCommand += " WHERE codigo = ";
+        sqlCommand += QString().setNum(cod);
+
+        db.open();
+        queryModel->setQuery(sqlCommand);
+        std::cout << queryModel->query().lastError().text().toStdString() << std::endl;
+        db.close();
+
+        disableClienteAlterar();
+    }
 }

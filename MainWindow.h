@@ -44,7 +44,9 @@ private slots:
 
     void on_cliente_excluir_excluirButton_clicked();
 
-    void on_clienteAlterarConsultar_clicked();
+    void on_cliente_alterar_consultarButton_clicked();
+
+    void on_cliente_alterar_alterarButton_clicked();
 
 private:
     Ui::MainWindow *ui;

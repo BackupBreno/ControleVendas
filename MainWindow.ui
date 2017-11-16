@@ -95,7 +95,7 @@
      <string>Descrição</string>
     </property>
    </widget>
-   <widget class="QLineEdit" name="clienteAlterarNome">
+   <widget class="QLineEdit" name="cliente_alterar_nome">
     <property name="enabled">
      <bool>false</bool>
     </property>
@@ -137,7 +137,7 @@
      <double>99999.990000000005239</double>
     </property>
    </widget>
-   <widget class="QLineEdit" name="clienteAlterarTelefone">
+   <widget class="QLineEdit" name="cliente_alterar_telefone">
     <property name="enabled">
      <bool>false</bool>
     </property>
@@ -299,7 +299,7 @@
      <number>99999</number>
     </property>
    </widget>
-   <widget class="QPushButton" name="clienteAlterarConsultar">
+   <widget class="QPushButton" name="cliente_alterar_consultarButton">
     <property name="geometry">
      <rect>
       <x>590</x>
@@ -609,7 +609,7 @@
      <string>Nome</string>
     </property>
    </widget>
-   <widget class="QPushButton" name="clienteAlterar">
+   <widget class="QPushButton" name="cliente_alterar_alterarButton">
     <property name="enabled">
      <bool>false</bool>
     </property>
@@ -638,7 +638,7 @@
      <string>ValorVenda:</string>
     </property>
    </widget>
-   <widget class="QSpinBox" name="clienteAlterarCod">
+   <widget class="QSpinBox" name="cliente_alterar_cod">
     <property name="geometry">
      <rect>
       <x>640</x>
@@ -780,7 +780,7 @@
      <string>Gerar Nota</string>
     </property>
    </widget>
-   <widget class="QLineEdit" name="clienteAlterarEndereco">
+   <widget class="QLineEdit" name="cliente_alterar_endereco">
     <property name="enabled">
      <bool>false</bool>
     </property>
