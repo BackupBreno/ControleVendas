@@ -3,11 +3,16 @@
 
 /*
  * TODO:
+ *  >> Geral <<
+ * -> Colocar as operações com transações.
+ *
  *  >> Produtos <<
  * -> Utilizar o throw quando tiver ocorrido erro na transação do SQL.
  * -> Ajustar o feedback no caso de erro.
  *
  *  >> Clientes <<
+ * -> Utilizar o throw quando tiver ocorrido erro na transação do SQL.
+ * -> Ajustar o feedback no caso de erro.
  */
 
 MainWindow::MainWindow(QWidget *parent) :
@@ -432,4 +437,10 @@ void MainWindow::on_cliente_alterar_alterarButton_clicked()
 
         disableClienteAlterar();
     }
+}
+
+// Nota
+void MainWindow::on_nota_gerarNotaButton_clicked()
+{
+
 }

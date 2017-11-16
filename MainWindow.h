@@ -48,6 +48,8 @@ private slots:
 
     void on_cliente_alterar_alterarButton_clicked();
 
+    void on_nota_gerarNotaButton_clicked();
+
 private:
     Ui::MainWindow *ui;
 

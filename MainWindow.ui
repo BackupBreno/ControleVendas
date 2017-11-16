@@ -510,7 +510,7 @@
      <string>Estoque Minimo</string>
     </property>
    </widget>
-   <widget class="QRadioButton" name="notaPrazo">
+   <widget class="QRadioButton" name="nota_isPrazo">
     <property name="geometry">
      <rect>
       <x>860</x>
@@ -690,7 +690,7 @@
      <enum>Qt::Horizontal</enum>
     </property>
    </widget>
-   <widget class="QDateEdit" name="notaVencimento">
+   <widget class="QDateEdit" name="nota_vencimento">
     <property name="geometry">
      <rect>
       <x>829</x>
@@ -1234,7 +1234,7 @@
      <string>Código do Produto:</string>
     </property>
    </widget>
-   <widget class="QPushButton" name="notaGerar">
+   <widget class="QPushButton" name="nota_gerarNotaButton">
     <property name="geometry">
      <rect>
       <x>810</x>
@@ -1367,7 +1367,7 @@
      <number>99999</number>
     </property>
    </widget>
-   <widget class="QSpinBox" name="notaCodCliente">
+   <widget class="QSpinBox" name="nota_cliente_cod">
     <property name="geometry">
      <rect>
       <x>860</x>
@@ -1396,7 +1396,7 @@
      <number>99999</number>
     </property>
    </widget>
-   <widget class="QRadioButton" name="notaVista">
+   <widget class="QRadioButton" name="nota_isVista">
     <property name="geometry">
      <rect>
       <x>780</x>
