@@ -440,6 +440,28 @@ void MainWindow::on_cliente_alterar_alterarButton_clicked()
 }
 
 // Nota
+void MainWindow::enableNota()
+{
+    ui->nota_cliente_cod->setEnabled(true);
+    ui->nota_vencimento->setEnabled(true);
+    ui->nota_gerarNotaButton->setEnabled(true);
+
+    ui->nota_produto_cod->setEnabled(false);
+    ui->nota_produto_consultar->setEnabled(false);
+    ui->nota_finalizarButton->setEnabled(false);
+}
+
+void MainWindow::disableNota()
+{
+    ui->nota_cliente_cod->setEnabled(false);
+    ui->nota_vencimento->setEnabled(false);
+    ui->nota_gerarNotaButton->setEnabled(false);
+
+    ui->nota_produto_cod->setEnabled(true);
+    ui->nota_produto_consultar->setEnabled(true);
+    ui->nota_finalizarButton->setEnabled(true);
+}
+
 void MainWindow::on_nota_gerarNotaButton_clicked()
 {
     bool isPrazo = ui->nota_isPrazo->isChecked();
@@ -475,6 +497,8 @@ void MainWindow::on_nota_gerarNotaButton_clicked()
 
         numVenda = cod;
 
+        disableNota();
+
         ui->nota_feedback->setText("Codigo: " + QString().setNum(cod));
     }
     else if (!isPrazo)
@@ -503,6 +527,8 @@ void MainWindow::on_nota_gerarNotaButton_clicked()
         db.close();
 
         numVenda = cod;
+
+        disableNota();
 
         ui->nota_feedback->setText("Codigo: " + QString().setNum(cod));
     }

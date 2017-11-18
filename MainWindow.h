@@ -48,6 +48,10 @@ private slots:
 
     void on_cliente_alterar_alterarButton_clicked();
 
+    void enableNota();
+
+    void disableNota();
+
     void on_nota_gerarNotaButton_clicked();
 
     void on_nota_isVista_clicked();
