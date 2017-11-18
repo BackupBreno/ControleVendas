@@ -396,7 +396,7 @@
      <string>Finalizar Nota</string>
     </property>
    </widget>
-   <widget class="QLabel" name="notaFeedback">
+   <widget class="QLabel" name="nota_feedback">
     <property name="geometry">
      <rect>
       <x>780</x>

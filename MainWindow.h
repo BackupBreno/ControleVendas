@@ -50,8 +50,14 @@ private slots:
 
     void on_nota_gerarNotaButton_clicked();
 
+    void on_nota_isVista_clicked();
+
+    void on_nota_isPrazo_clicked();
+
 private:
     Ui::MainWindow *ui;
+
+    int numVenda;
 
     QSqlDatabase db;
     QSqlQueryModel *queryModel;

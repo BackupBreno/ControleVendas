@@ -302,7 +302,7 @@ void MainWindow::on_cliente_cadastro_cadastrarButton_clicked()
         QString sqlCommand = "INSERT INTO clientes VALUES (";
         sqlCommand += QString().setNum(cod) + ", ";
         sqlCommand += "\"" + nome + "\", ";
-        sqlCommand += "\"" + endereco + "\", ";;
+        sqlCommand += "\"" + endereco + "\", ";
         sqlCommand += "\"" + telefone + "\")";
 
         db.open();
@@ -442,5 +442,86 @@ void MainWindow::on_cliente_alterar_alterarButton_clicked()
 // Nota
 void MainWindow::on_nota_gerarNotaButton_clicked()
 {
+    bool isPrazo = ui->nota_isPrazo->isChecked();
 
+    if (isPrazo)
+    {
+        int cod = 10;
+
+        int codCliente = ui->nota_cliente_cod->value();
+
+        QDate vencimento = ui->nota_vencimento->date();
+
+        QString vencimentoString = QString(vencimento.year()) + "-" + QString(vencimento.month()) + "-" + QString(vencimento.day());
+
+        QDate venda = QDate::currentDate();
+
+        QString vendaString = QString(venda.year()) + "/" + QString(venda.month()) + "/" + QString(venda.day());
+
+        QString sqlCommand = "INSERT INTO vendas VALUES (";
+        sqlCommand += QString().setNum(cod) + ", ";
+        sqlCommand += "\"" + vendaString + "\", ";
+        sqlCommand += "\"" + vencimentoString + "\", ";
+        sqlCommand += isPrazo + ", ";
+        sqlCommand += QString().setNum(codCliente) + ")";
+
+        db.open();
+
+        queryModel->setQuery(sqlCommand);
+
+        std::cout << queryModel->query().lastError().text().toStdString() << std::endl;
+
+        db.close();
+
+        numVenda = cod;
+
+        ui->nota_feedback->setText("Codigo: " + QString().setNum(cod));
+    }
+    else if (!isPrazo)
+    {
+        int cod = 10;
+
+        int codCliente = ui->nota_cliente_cod->value();
+
+        QDate data = QDate::currentDate();
+
+        QString dataString = QString(data.year()) + "/" + QString(data.month()) + "/" + QString(data.day());
+
+        QString sqlCommand = "INSERT INTO vendas VALUES (";
+        sqlCommand += QString().setNum(cod) + ", ";
+        sqlCommand += "\"" + dataString + "\", ";
+        sqlCommand += "\"" + dataString + "\", ";
+        sqlCommand += isPrazo + ", ";
+        sqlCommand += QString().setNum(codCliente) + ")";
+
+        db.open();
+
+        queryModel->setQuery(sqlCommand);
+
+        std::cout << queryModel->query().lastError().text().toStdString() << std::endl;
+
+        db.close();
+
+        numVenda = cod;
+
+        ui->nota_feedback->setText("Codigo: " + QString().setNum(cod));
+    }
+}
+
+void MainWindow::on_nota_isVista_clicked()
+{
+    ui->nota_cliente_cod->setValue(-1);
+    ui->nota_cliente_cod->setEnabled(false);
+
+    ui->nota_vencimento->setDate(QDate::currentDate());
+    ui->nota_vencimento->setEnabled(false);
+}
+
+void MainWindow::on_nota_isPrazo_clicked()
+{
+    ui->nota_cliente_cod->setValue(0);
+    ui->nota_cliente_cod->setEnabled(true);
+
+    ui->nota_vencimento->setDate(QDate(2000, 1, 1));
+    ui->nota_vencimento->setEnabled(true);
 }
