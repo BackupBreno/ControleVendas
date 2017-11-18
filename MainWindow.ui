@@ -121,7 +121,7 @@
      </rect>
     </property>
    </widget>
-   <widget class="QDoubleSpinBox" name="notaValPago">
+   <widget class="QDoubleSpinBox" name="nota_produto_valPago">
     <property name="enabled">
      <bool>false</bool>
     </property>
@@ -244,7 +244,7 @@
      <enum>Qt::Horizontal</enum>
     </property>
    </widget>
-   <widget class="QPushButton" name="notaAddProduto">
+   <widget class="QPushButton" name="nota_produto_addButton">
     <property name="enabled">
      <bool>false</bool>
     </property>
@@ -458,7 +458,7 @@
      <string>Consultas Gerais</string>
     </property>
    </widget>
-   <widget class="QLabel" name="notaFeedbackProduto">
+   <widget class="QLabel" name="nota_produto_feedback">
     <property name="geometry">
      <rect>
       <x>780</x>
@@ -859,7 +859,7 @@
      <string>Menu de Produtos</string>
     </property>
    </widget>
-   <widget class="QSpinBox" name="notaQtdProduto">
+   <widget class="QSpinBox" name="nota_produto_qtd">
     <property name="enabled">
      <bool>false</bool>
     </property>
@@ -1133,7 +1133,7 @@
      <string>Estoque Minimo:</string>
     </property>
    </widget>
-   <widget class="QLabel" name="notaDescricaoProduto">
+   <widget class="QLabel" name="nota_produto_descricao">
     <property name="geometry">
      <rect>
       <x>780</x>

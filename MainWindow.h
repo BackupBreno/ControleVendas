@@ -58,6 +58,12 @@ private slots:
 
     void on_nota_isPrazo_clicked();
 
+    void on_nota_produto_consultar_clicked();
+
+    void on_nota_produto_addButton_clicked();
+
+    void on_nota_finalizarButton_clicked();
+
 private:
     Ui::MainWindow *ui;
 

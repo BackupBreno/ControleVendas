@@ -77,7 +77,14 @@ void MainWindow::on_produto_cadastro_cadastrarButton_clicked()
 
     if (descricao.length() <= 30 && descricao.length() > 0)
     {
-        int cod = 10;
+        QString sqlCommand = "select cod from codreferencia where entidade = \"produtos\"";
+        db.open();
+        queryModel->setQuery(sqlCommand);
+        db.close();
+        queryModel->query().next();
+        int cod = queryModel->query().value(0).toInt();
+
+        ui->produto_cadastro_feedback->setText("Codigo: " + QString().setNum(cod));
 
         float valCompra =  ui->produto_cadastro_valCompra->value();
 
@@ -87,7 +94,7 @@ void MainWindow::on_produto_cadastro_cadastrarButton_clicked()
 
         int estoqueMin = ui->produto_cadastro_estMinimo->value();
 
-        QString sqlCommand = "INSERT INTO produtos VALUES (";
+        sqlCommand = "INSERT INTO produtos VALUES (";
         sqlCommand += QString().setNum(cod) + ", ";
         sqlCommand += "\"" + descricao + "\", ";
         sqlCommand += QString().setNum(valCompra) + ", ";
@@ -289,7 +296,12 @@ void MainWindow::on_cliente_cadastro_cadastrarButton_clicked()
 {
     std::cout << "C C" << std::endl;
 
-    int cod = 10;
+    QString sqlCommand = "select cod from codreferencia where entidade = \"clientes\"";
+    db.open();
+    queryModel->setQuery(sqlCommand);
+    db.close();
+    queryModel->query().next();
+    int cod = queryModel->query().value(0).toInt();
 
     QString nome = ui->cliente_cadastro_nome->text();
 
@@ -299,7 +311,7 @@ void MainWindow::on_cliente_cadastro_cadastrarButton_clicked()
 
     if (nome.length() > 0 && endereco.length() > 0)
     {
-        QString sqlCommand = "INSERT INTO clientes VALUES (";
+        sqlCommand = "INSERT INTO clientes VALUES (";
         sqlCommand += QString().setNum(cod) + ", ";
         sqlCommand += "\"" + nome + "\", ";
         sqlCommand += "\"" + endereco + "\", ";
@@ -468,7 +480,12 @@ void MainWindow::on_nota_gerarNotaButton_clicked()
 
     if (isPrazo)
     {
-        int cod = 10;
+        QString sqlCommand = "select cod from codreferencia where entidade = \"vendas\"";
+        db.open();
+        queryModel->setQuery(sqlCommand);
+        db.close();
+        queryModel->query().next();
+        int cod = queryModel->query().value(0).toInt();
 
         int codCliente = ui->nota_cliente_cod->value();
 
@@ -480,7 +497,7 @@ void MainWindow::on_nota_gerarNotaButton_clicked()
 
         QString vendaString = QString(venda.year()) + "/" + QString(venda.month()) + "/" + QString(venda.day());
 
-        QString sqlCommand = "INSERT INTO vendas VALUES (";
+        sqlCommand = "INSERT INTO vendas VALUES (";
         sqlCommand += QString().setNum(cod) + ", ";
         sqlCommand += "\"" + vendaString + "\", ";
         sqlCommand += "\"" + vencimentoString + "\", ";
@@ -550,4 +567,123 @@ void MainWindow::on_nota_isPrazo_clicked()
 
     ui->nota_vencimento->setDate(QDate(2000, 1, 1));
     ui->nota_vencimento->setEnabled(true);
+}
+
+void MainWindow::on_nota_produto_consultar_clicked()
+{
+    if (ui->nota_produto_consultar->text() == "Consultar")
+    {
+        int codProduto = ui->nota_produto_cod->value();
+
+        QString sqlCommand = "SELECT * FROM produtos WHERE codigo = ";
+        sqlCommand += QString().setNum(codProduto);
+
+        db.open();
+
+        queryModel->setQuery(sqlCommand);
+
+        std::cout << queryModel->query().lastError().text().toStdString() << std::endl;
+
+        db.close();
+
+        queryModel->query().next();
+
+        ui->nota_produto_descricao->setText(queryModel->query().value(1).toString());
+
+        ui->nota_produto_cod->setEnabled(false);
+        ui->nota_produto_cod->setEnabled(false);
+
+        ui->nota_produto_qtd->setEnabled(true);
+        ui->nota_produto_valPago->setEnabled(true);
+        ui->nota_produto_addButton->setEnabled(true);
+
+        ui->nota_produto_consultar->setText("Outro Produto");
+    }
+    else
+    {
+        ui->nota_produto_cod->setEnabled(true);
+        ui->nota_produto_cod->setEnabled(true);
+
+        ui->nota_produto_qtd->setEnabled(false);
+        ui->nota_produto_valPago->setEnabled(false);
+        ui->nota_produto_addButton->setEnabled(false);
+
+        ui->nota_produto_consultar->setText("Consultar");
+    }
+}
+
+void MainWindow::on_nota_produto_addButton_clicked()
+{
+    int codProduto = ui->nota_produto_cod->value();
+
+    int qtdDesejada = ui->nota_produto_qtd->value();
+
+    float valPago = ui->nota_produto_valPago->value();
+
+    ui->nota_produto_cod->setValue(0);
+
+    ui->nota_produto_cod->setEnabled(true);
+
+    ui->nota_produto_consultar->setEnabled(true);
+
+    ui->nota_produto_consultar->setText("Consultar");
+
+    ui->nota_produto_descricao->setText("");
+
+    ui->nota_produto_qtd->setValue(0);
+
+    ui->nota_produto_addButton->setEnabled(false);
+
+    ui->nota_produto_valPago->setEnabled(false);
+
+    ui->nota_produto_feedback->setText("Produto adicionado.");
+
+    QString sqlCommand = "INSERT INTO itensvendidos VALUES (";
+    sqlCommand += QString().setNum(numVenda) + ", ";
+    sqlCommand += QString().setNum(codProduto) + ", ";
+    sqlCommand += QString().setNum(qtdDesejada) + ", ";
+    sqlCommand += QString().setNum(valPago) + ")";
+
+    db.open();
+
+    queryModel->setQuery(sqlCommand);
+
+    std::cout << queryModel->query().lastError().text().toStdString() << std::endl;
+
+    db.close();
+}
+
+void MainWindow::on_nota_finalizarButton_clicked()
+{
+    ui->nota_produto_feedback->setText("Nota finalizada.");
+
+    ui->nota_isPrazo->setChecked(false);
+    ui->nota_isVista->setChecked(false);
+
+    ui->nota_cliente_cod->setEnabled(true);
+    ui->nota_cliente_cod->setValue(0);
+
+    ui->nota_vencimento->setEnabled(true);
+    ui->nota_vencimento->setDate(QDate(2000, 1, 1));
+
+    ui->nota_gerarNotaButton->setEnabled(true);
+
+    ui->nota_feedback->setText("");
+
+    ui->nota_produto_cod->setEnabled(false);
+    ui->nota_produto_cod->setValue(0);
+
+    ui->nota_produto_consultar->setEnabled(false);
+
+    ui->nota_produto_descricao->setText("Descrição.");
+
+    ui->nota_produto_qtd->setEnabled(false);
+    ui->nota_produto_qtd->setValue(0);
+
+    ui->nota_produto_valPago->setEnabled(false);
+    ui->nota_produto_valPago->setValue(0);
+
+    ui->nota_produto_addButton->setEnabled(false);
+
+    ui->nota_finalizarButton->setEnabled(false);
 }
