@@ -81,7 +81,7 @@ void MainWindow::on_produto_cadastro_cadastrarButton_clicked()
         db.open();
         queryModel->setQuery(sqlCommand);
         db.close();
-        queryModel->query().next();
+        queryModel->query().first();
         int cod = queryModel->query().value(0).toInt();
 
         ui->produto_cadastro_feedback->setText("Codigo: " + QString().setNum(cod));
@@ -294,14 +294,14 @@ void MainWindow::disableClienteAlterar()
 
 void MainWindow::on_cliente_cadastro_cadastrarButton_clicked()
 {
-    std::cout << "C C" << std::endl;
-
-    QString sqlCommand = "select cod from codreferencia where entidade = \"clientes\"";
+    QString sqlCommand = "SELECT cod FROM codreferencia WHERE entidade = \"clientes\"";
     db.open();
     queryModel->setQuery(sqlCommand);
     db.close();
-    queryModel->query().next();
+    queryModel->query().first();
     int cod = queryModel->query().value(0).toInt();
+
+    std::cout << "Codigo: " << cod << std::endl;
 
     QString nome = ui->cliente_cadastro_nome->text();
 
@@ -316,6 +316,8 @@ void MainWindow::on_cliente_cadastro_cadastrarButton_clicked()
         sqlCommand += "\"" + nome + "\", ";
         sqlCommand += "\"" + endereco + "\", ";
         sqlCommand += "\"" + telefone + "\")";
+
+        std::cout << "SQL: " << sqlCommand.toStdString() << std::endl;
 
         db.open();
 
@@ -484,25 +486,29 @@ void MainWindow::on_nota_gerarNotaButton_clicked()
         db.open();
         queryModel->setQuery(sqlCommand);
         db.close();
-        queryModel->query().next();
+        queryModel->query().first();
         int cod = queryModel->query().value(0).toInt();
 
         int codCliente = ui->nota_cliente_cod->value();
 
         QDate vencimento = ui->nota_vencimento->date();
 
-        QString vencimentoString = QString(vencimento.year()) + "-" + QString(vencimento.month()) + "-" + QString(vencimento.day());
+        QString vencimentoString = QString().setNum(vencimento.year()) + "-" + QString().setNum(vencimento.month()) + "-" + QString().setNum(vencimento.day());
 
         QDate venda = QDate::currentDate();
 
-        QString vendaString = QString(venda.year()) + "/" + QString(venda.month()) + "/" + QString(venda.day());
+        QString vendaString = QString().setNum(venda.year()) + "-" + QString().setNum(venda.month()) + "-" + QString().setNum(venda.day());
+
+        QString isPrazoStirng = (isPrazo ? "true" : "false");
 
         sqlCommand = "INSERT INTO vendas VALUES (";
         sqlCommand += QString().setNum(cod) + ", ";
         sqlCommand += "\"" + vendaString + "\", ";
         sqlCommand += "\"" + vencimentoString + "\", ";
-        sqlCommand += isPrazo + ", ";
+        sqlCommand += isPrazoStirng + ", ";
         sqlCommand += QString().setNum(codCliente) + ")";
+
+        std::cout << sqlCommand.toStdString() << std::endl;
 
         db.open();
 
@@ -520,19 +526,26 @@ void MainWindow::on_nota_gerarNotaButton_clicked()
     }
     else if (!isPrazo)
     {
-        int cod = 10;
+        QString sqlCommand = "select cod from codreferencia where entidade = \"vendas\"";
+        db.open();
+        queryModel->setQuery(sqlCommand);
+        db.close();
+        queryModel->query().first();
+        int cod = queryModel->query().value(0).toInt();
 
         int codCliente = ui->nota_cliente_cod->value();
 
         QDate data = QDate::currentDate();
 
-        QString dataString = QString(data.year()) + "/" + QString(data.month()) + "/" + QString(data.day());
+        QString dataString = QString().setNum(data.year()) + "-" + QString().setNum(data.month()) + "-" + QString().setNum(data.day());
 
-        QString sqlCommand = "INSERT INTO vendas VALUES (";
+        QString isPrazoString = (isPrazo ? "true" : "false");
+
+        sqlCommand = "INSERT INTO vendas VALUES (";
         sqlCommand += QString().setNum(cod) + ", ";
         sqlCommand += "\"" + dataString + "\", ";
         sqlCommand += "\"" + dataString + "\", ";
-        sqlCommand += isPrazo + ", ";
+        sqlCommand += isPrazoString + ", ";
         sqlCommand += QString().setNum(codCliente) + ")";
 
         db.open();
