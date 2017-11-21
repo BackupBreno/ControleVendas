@@ -83,6 +83,7 @@ void MainWindow::on_produto_cadastro_cadastrarButton_clicked()
         db.close();
         queryModel->query().first();
         int cod = queryModel->query().value(0).toInt();
+        cod = 0;
 
         ui->produto_cadastro_feedback->setText("Codigo: " + QString().setNum(cod));
 
@@ -103,14 +104,21 @@ void MainWindow::on_produto_cadastro_cadastrarButton_clicked()
         sqlCommand += QString().setNum(estoqueMin) + ")";
 
         db.open();
-
         queryModel->setQuery(sqlCommand);
-
-        std::cout << queryModel->query().lastError().text().toStdString() << std::endl;
-
         db.close();
 
-        ui->produto_cadastro_feedback->setText("Codigo: " + QString().setNum(cod));
+        QString error = queryModel->query().lastError().text();
+
+        if (error == "\n")
+        {
+            ui->produto_cadastro_feedback->setText("Codigo: " + QString().setNum(cod));
+        }
+        else
+        {
+            ui->produto_cadastro_feedback->setText("Erro no cadastro.");
+
+            std::cout << error.toStdString() << std::endl;
+        }
     }
     else
     {
