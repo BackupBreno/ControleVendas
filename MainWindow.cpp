@@ -83,9 +83,6 @@ void MainWindow::on_produto_cadastro_cadastrarButton_clicked()
         db.close();
         queryModel->query().first();
         int cod = queryModel->query().value(0).toInt();
-        cod = 0;
-
-        ui->produto_cadastro_feedback->setText("Codigo: " + QString().setNum(cod));
 
         float valCompra =  ui->produto_cadastro_valCompra->value();
 
@@ -109,7 +106,9 @@ void MainWindow::on_produto_cadastro_cadastrarButton_clicked()
 
         QString error = queryModel->query().lastError().text();
 
-        if (error == "\n")
+        std::cout << "Erro: \"" + error.toStdString() + "\"\n";
+
+        if (error == " ")
         {
             ui->produto_cadastro_feedback->setText("Codigo: " + QString().setNum(cod));
         }
@@ -143,13 +142,22 @@ void MainWindow::on_produto_consulta_consultarButton_clicked()
 
     db.close();
 
-    queryModel->query().next();
-
-    ui->produto_consulta_descricao->setText(queryModel->query().value(1).toString());
-    ui->produto_consulta_valCompra->setText(queryModel->query().value(2).toString());
-    ui->produto_consulta_valVenda->setText(queryModel->query().value(3).toString());
-    ui->produto_consulta_estoque->setText(queryModel->query().value(4).toString());
-    ui->produto_consulta_estMin->setText(queryModel->query().value(5).toString());
+    if (!queryModel->query().next())
+    {
+        ui->produto_consulta_descricao->setText("Código invalido!");
+        ui->produto_consulta_valCompra->setText("Valor Compra");
+        ui->produto_consulta_valVenda->setText("Valor Venda.");
+        ui->produto_consulta_estoque->setText("Quantidade Estoque");
+        ui->produto_consulta_estMin->setText("Estoque Minimo");
+    }
+    else
+    {
+        ui->produto_consulta_descricao->setText(queryModel->query().value(1).toString());
+        ui->produto_consulta_valCompra->setText(queryModel->query().value(2).toString());
+        ui->produto_consulta_valVenda->setText(queryModel->query().value(3).toString());
+        ui->produto_consulta_estoque->setText(queryModel->query().value(4).toString());
+        ui->produto_consulta_estMin->setText(queryModel->query().value(5).toString());
+    }
 }
 
 void MainWindow::on_produto_excluit_excluirButton_clicked()
@@ -158,18 +166,30 @@ void MainWindow::on_produto_excluit_excluirButton_clicked()
 
     int cod = ui->produto_excluir_cod->value();
 
-    QString sqlCommand = "DELETE FROM produtos WHERE codigo = ";
+    QString sqlCommand = "SELECT * FROM produtos WHERE codigo = ";
     sqlCommand += QString().setNum(cod);
 
     db.open();
-
     queryModel->setQuery(sqlCommand);
-
-    std::cout << queryModel->query().lastError().text().toStdString() << std::endl;
-
     db.close();
 
-    ui->produto_excluir_feedback->setText("Produto excluido.");
+    if (queryModel->query().next())
+    {
+        sqlCommand = "DELETE FROM produtos WHERE codigo = ";
+        sqlCommand += QString().setNum(cod);
+
+        db.open();
+        queryModel->setQuery(sqlCommand);
+        db.close();
+
+        std::cout << queryModel->query().lastError().text().toStdString() << std::endl;
+
+        ui->produto_excluir_feedback->setText("Produto excluido.");
+    }
+    else
+    {
+        ui->produto_excluir_feedback->setText("Produto não encontrado");
+    }
 }
 
 void MainWindow::on_produto_alterar_consultarButton_clicked()
@@ -189,15 +209,24 @@ void MainWindow::on_produto_alterar_consultarButton_clicked()
 
     db.close();
 
-    queryModel->query().next();
+    if (!queryModel->query().next())
+    {
+        ui->produto_alterar_descricao->setText("Código invalido!");
+        ui->produto_alterar_valCompra->setValue(0);
+        ui->produto_alterar_valVenda->setValue(0);
+        ui->produto_alterar_estoque->setValue(0);
+        ui->produto_alterar_estMin->setValue(0);
+    }
+    else
+    {
+        ui->produto_alterar_descricao->setText(queryModel->query().value(1).toString());
+        ui->produto_alterar_valCompra->setValue(queryModel->query().value(2).toFloat());
+        ui->produto_alterar_valVenda->setValue(queryModel->query().value(3).toFloat());
+        ui->produto_alterar_estoque->setValue(queryModel->query().value(4).toInt());
+        ui->produto_alterar_estMin->setValue(queryModel->query().value(5).toInt());
 
-    ui->produto_alterar_descricao->setText(queryModel->query().value(1).toString());
-    ui->produto_alterar_valCompra->setValue(queryModel->query().value(2).toFloat());
-    ui->produto_alterar_valVenda->setValue(queryModel->query().value(3).toFloat());
-    ui->produto_alterar_estoque->setValue(queryModel->query().value(4).toInt());
-    ui->produto_alterar_estMin->setValue(queryModel->query().value(5).toInt());
-
-    enableProdutoAlterar();
+        enableProdutoAlterar();
+    }
 }
 
 void MainWindow::on_produto_alterar_alterarButton_clicked()
@@ -335,7 +364,20 @@ void MainWindow::on_cliente_cadastro_cadastrarButton_clicked()
 
         db.close();
 
-        ui->cliente_cadastro_feedback->setText("Codigo: " + QString().setNum(cod));
+        QString error = queryModel->query().lastError().text();
+
+        std::cout << "Erro: \"" + error.toStdString() + "\"\n";
+
+        if (error == " ")
+        {
+            ui->cliente_cadastro_feedback->setText("Codigo: " + QString().setNum(cod));
+        }
+        else
+        {
+            ui->cliente_cadastro_feedback->setText("Error no cadastro");
+
+            std::cout << error.toStdString() << std::endl;
+        }
     }
     else
     {
@@ -360,11 +402,18 @@ void MainWindow::on_cliente_consulta_consultarButton_clicked()
 
     db.close();
 
-    queryModel->query().next();
-
-    ui->cliente_consulta_nome->setText(queryModel->query().value(1).toString());
-    ui->cliente_consulta_endereco->setText(queryModel->query().value(2).toString());
-    ui->cliente_consulta_telefone->setText(queryModel->query().value(3).toString());
+    if (!queryModel->query().next())
+    {
+        ui->cliente_consulta_nome->setText("Cliente não encontrado");
+        ui->cliente_consulta_endereco->setText("Endereco");
+        ui->cliente_consulta_telefone->setText("Telefone");
+    }
+    else
+    {
+        ui->cliente_consulta_nome->setText(queryModel->query().value(1).toString());
+        ui->cliente_consulta_endereco->setText(queryModel->query().value(2).toString());
+        ui->cliente_consulta_telefone->setText(queryModel->query().value(3).toString());
+    }
 }
 
 void MainWindow::on_cliente_excluir_excluirButton_clicked()
@@ -373,18 +422,32 @@ void MainWindow::on_cliente_excluir_excluirButton_clicked()
 
     int cod = ui->cliente_excluir_cod->value();
 
-    QString sqlCommand = "DELETE FROM clientes WHERE codigo = ";
+    QString sqlCommand = "SELECT * FROM clientes WHERE codigo = ";
     sqlCommand += QString().setNum(cod);
 
     db.open();
-
     queryModel->setQuery(sqlCommand);
-
-    std::cout << queryModel->query().lastError().text().toStdString() << std::endl;
-
     db.close();
 
-    ui->cliente_excluir_feedback->setText("Cliente excluido.");
+    if (queryModel->query().next())
+    {
+        sqlCommand = "DELETE FROM clientes WHERE codigo = ";
+        sqlCommand += QString().setNum(cod);
+
+        db.open();
+
+        queryModel->setQuery(sqlCommand);
+
+        std::cout << queryModel->query().lastError().text().toStdString() << std::endl;
+
+        db.close();
+
+        ui->cliente_excluir_feedback->setText("Cliente excluido.");
+    }
+    else
+    {
+        ui->cliente_excluir_feedback->setText("Cliente não encontrado");
+    }
 }
 
 void MainWindow::on_cliente_alterar_consultarButton_clicked()
@@ -404,13 +467,20 @@ void MainWindow::on_cliente_alterar_consultarButton_clicked()
 
     db.close();
 
-    queryModel->query().next();
+    if (!queryModel->query().next())
+    {
+        ui->cliente_alterar_nome->setText("Cliente não encontrado");
+        ui->cliente_alterar_endereco->setText("Endereco");
+        ui->cliente_alterar_telefone->setText("Telefone");
+    }
+    else
+    {
+        ui->cliente_alterar_nome->setText(queryModel->query().value(1).toString());
+        ui->cliente_alterar_endereco->setText(queryModel->query().value(2).toString());
+        ui->cliente_alterar_telefone->setText(queryModel->query().value(3).toString());
 
-    ui->cliente_alterar_nome->setText(queryModel->query().value(1).toString());
-    ui->cliente_alterar_endereco->setText(queryModel->query().value(2).toString());
-    ui->cliente_alterar_telefone->setText(queryModel->query().value(3).toString());
-
-    enableClienteAlterar();
+        enableClienteAlterar();
+    }
 }
 
 void MainWindow::on_cliente_alterar_alterarButton_clicked()
@@ -519,18 +589,25 @@ void MainWindow::on_nota_gerarNotaButton_clicked()
         std::cout << sqlCommand.toStdString() << std::endl;
 
         db.open();
-
         queryModel->setQuery(sqlCommand);
-
-        std::cout << queryModel->query().lastError().text().toStdString() << std::endl;
-
         db.close();
 
         numVenda = cod;
 
-        disableNota();
+        QString error = queryModel->query().lastError().text();
 
-        ui->nota_feedback->setText("Codigo: " + QString().setNum(cod));
+        if (error == " ")
+        {
+            ui->nota_feedback->setText("Codigo: " + QString().setNum(cod));
+
+            disableNota();
+        }
+        else
+        {
+            ui->nota_feedback->setText("Error na geração");
+
+            std::cout << error.toStdString() << std::endl;
+        }
     }
     else if (!isPrazo)
     {
@@ -557,18 +634,25 @@ void MainWindow::on_nota_gerarNotaButton_clicked()
         sqlCommand += QString().setNum(codCliente) + ")";
 
         db.open();
-
         queryModel->setQuery(sqlCommand);
-
-        std::cout << queryModel->query().lastError().text().toStdString() << std::endl;
-
         db.close();
 
         numVenda = cod;
 
-        disableNota();
+        QString error = queryModel->query().lastError().text();
 
-        ui->nota_feedback->setText("Codigo: " + QString().setNum(cod));
+        if (error == " ")
+        {
+            ui->nota_feedback->setText("Codigo: " + QString().setNum(cod));
+
+            disableNota();
+        }
+        else
+        {
+            ui->nota_feedback->setText("Error na geração");
+
+            std::cout << error.toStdString() << std::endl;
+        }
     }
 }
 
@@ -600,25 +684,26 @@ void MainWindow::on_nota_produto_consultar_clicked()
         sqlCommand += QString().setNum(codProduto);
 
         db.open();
-
         queryModel->setQuery(sqlCommand);
-
-        std::cout << queryModel->query().lastError().text().toStdString() << std::endl;
-
         db.close();
 
-        queryModel->query().next();
+        if (!queryModel->query().next())
+        {
+            ui->nota_produto_descricao->setText("Codigo invalido");
+        }
+        else
+        {
+            ui->nota_produto_descricao->setText(queryModel->query().value(1).toString());
 
-        ui->nota_produto_descricao->setText(queryModel->query().value(1).toString());
+            ui->nota_produto_cod->setEnabled(false);
+            ui->nota_produto_cod->setEnabled(false);
 
-        ui->nota_produto_cod->setEnabled(false);
-        ui->nota_produto_cod->setEnabled(false);
+            ui->nota_produto_qtd->setEnabled(true);
+            ui->nota_produto_valPago->setEnabled(true);
+            ui->nota_produto_addButton->setEnabled(true);
 
-        ui->nota_produto_qtd->setEnabled(true);
-        ui->nota_produto_valPago->setEnabled(true);
-        ui->nota_produto_addButton->setEnabled(true);
-
-        ui->nota_produto_consultar->setText("Outro Produto");
+            ui->nota_produto_consultar->setText("Outro Produto");
+        }
     }
     else
     {
@@ -628,6 +713,8 @@ void MainWindow::on_nota_produto_consultar_clicked()
         ui->nota_produto_qtd->setEnabled(false);
         ui->nota_produto_valPago->setEnabled(false);
         ui->nota_produto_addButton->setEnabled(false);
+
+        ui->nota_produto_consultar->setText("Descricao");
 
         ui->nota_produto_consultar->setText("Consultar");
     }
@@ -641,24 +728,6 @@ void MainWindow::on_nota_produto_addButton_clicked()
 
     float valPago = ui->nota_produto_valPago->value();
 
-    ui->nota_produto_cod->setValue(0);
-
-    ui->nota_produto_cod->setEnabled(true);
-
-    ui->nota_produto_consultar->setEnabled(true);
-
-    ui->nota_produto_consultar->setText("Consultar");
-
-    ui->nota_produto_descricao->setText("");
-
-    ui->nota_produto_qtd->setValue(0);
-
-    ui->nota_produto_addButton->setEnabled(false);
-
-    ui->nota_produto_valPago->setEnabled(false);
-
-    ui->nota_produto_feedback->setText("Produto adicionado.");
-
     QString sqlCommand = "INSERT INTO itensvendidos VALUES (";
     sqlCommand += QString().setNum(numVenda) + ", ";
     sqlCommand += QString().setNum(codProduto) + ", ";
@@ -666,12 +735,37 @@ void MainWindow::on_nota_produto_addButton_clicked()
     sqlCommand += QString().setNum(valPago) + ")";
 
     db.open();
-
     queryModel->setQuery(sqlCommand);
-
-    std::cout << queryModel->query().lastError().text().toStdString() << std::endl;
-
     db.close();
+
+    QString error = queryModel->query().lastError().text();
+
+    if (error == " ")
+    {
+        ui->nota_produto_cod->setValue(0);
+
+        ui->nota_produto_cod->setEnabled(true);
+
+        ui->nota_produto_consultar->setEnabled(true);
+
+        ui->nota_produto_consultar->setText("Consultar");
+
+        ui->nota_produto_descricao->setText("Descricao");
+
+        ui->nota_produto_qtd->setValue(0);
+
+        ui->nota_produto_addButton->setEnabled(false);
+
+        ui->nota_produto_valPago->setEnabled(false);
+
+        ui->nota_produto_feedback->setText("Produto adicionado.");
+    }
+    else
+    {
+        ui->nota_produto_feedback->setText("Falha ao adicionar o produto");
+
+        std::cout << error.toStdString() << std::endl;
+    }
 }
 
 void MainWindow::on_nota_finalizarButton_clicked()
@@ -708,3 +802,4 @@ void MainWindow::on_nota_finalizarButton_clicked()
 
     ui->nota_finalizarButton->setEnabled(false);
 }
+
