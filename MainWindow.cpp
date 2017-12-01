@@ -29,6 +29,9 @@ MainWindow::MainWindow(QWidget *parent) :
     db.setDatabaseName("VendasBD");
     db.setUserName("root");
     db.setPassword("1234567890");
+
+    beginTransaction = "START TRANSACTION";
+    endTransaction = "COMMIT";
 }
 
 MainWindow::~MainWindow()
@@ -92,6 +95,9 @@ void MainWindow::on_produto_cadastro_cadastrarButton_clicked()
 
         int estoqueMin = ui->produto_cadastro_estMinimo->value();
 
+        db.open();
+        queryModel->setQuery(beginTransaction);
+
         sqlCommand = "INSERT INTO produtos VALUES (";
         sqlCommand += QString().setNum(cod) + ", ";
         sqlCommand += "\"" + descricao + "\", ";
@@ -99,9 +105,9 @@ void MainWindow::on_produto_cadastro_cadastrarButton_clicked()
         sqlCommand += QString().setNum(valVenda) + ", ";
         sqlCommand += QString().setNum(estoque) + ", ";
         sqlCommand += QString().setNum(estoqueMin) + ")";
-
-        db.open();
         queryModel->setQuery(sqlCommand);
+
+        queryModel->setQuery(endTransaction);
         db.close();
 
         QString error = queryModel->query().lastError().text();
@@ -131,15 +137,14 @@ void MainWindow::on_produto_consulta_consultarButton_clicked()
 
     int cod = ui->produto_consulta_cod->value();
 
+    db.open();
+    queryModel->setQuery(beginTransaction);
+
     QString sqlCommand = "SELECT * FROM produtos WHERE codigo = ";
     sqlCommand += QString().setNum(cod);
-
-    db.open();
-
     queryModel->setQuery(sqlCommand);
 
-    std::cout << queryModel->query().lastError().text().toStdString() << std::endl;
-
+    queryModel->setQuery(endTransaction);
     db.close();
 
     if (!queryModel->query().next())
@@ -162,27 +167,29 @@ void MainWindow::on_produto_consulta_consultarButton_clicked()
 
 void MainWindow::on_produto_excluit_excluirButton_clicked()
 {
-    std::cout << "P X" << std::endl;
-
     int cod = ui->produto_excluir_cod->value();
+
+    db.open();
+    queryModel->setQuery(beginTransaction);
 
     QString sqlCommand = "SELECT * FROM produtos WHERE codigo = ";
     sqlCommand += QString().setNum(cod);
-
-    db.open();
     queryModel->setQuery(sqlCommand);
+
+    queryModel->setQuery(endTransaction);
     db.close();
 
     if (queryModel->query().next())
-    {
+    {  
+        db.open();
+        queryModel->setQuery(beginTransaction);
+
         sqlCommand = "DELETE FROM produtos WHERE codigo = ";
         sqlCommand += QString().setNum(cod);
-
-        db.open();
         queryModel->setQuery(sqlCommand);
-        db.close();
 
-        std::cout << queryModel->query().lastError().text().toStdString() << std::endl;
+        queryModel->setQuery(endTransaction);
+        db.close();
 
         ui->produto_excluir_feedback->setText("Produto excluido.");
     }
@@ -844,7 +851,9 @@ void MainWindow::on_check_entreDatasButton_clicked()
         sqlCommand += "\"" + inicioString + "\"";
 
         db.open();
+        db.transaction();
         queryModel->setQuery(sqlCommand);
+        db.commit();
         db.close();
 
         ui->check_list_intervalo->clear();

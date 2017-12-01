@@ -75,6 +75,9 @@ private:
 
     QSqlDatabase db;
     QSqlQueryModel *queryModel;
+
+    QString beginTransaction;
+    QString endTransaction;
 };
 
 #endif // MAINWINDOW_H
