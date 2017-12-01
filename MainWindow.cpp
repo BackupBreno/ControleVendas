@@ -803,3 +803,57 @@ void MainWindow::on_nota_finalizarButton_clicked()
     ui->nota_finalizarButton->setEnabled(false);
 }
 
+// Check Geral
+void MainWindow::on_check_produtos_abaixo_button_clicked()
+{
+    QString sqlCommand = "SELECT * FROM produtos WHERE quantidadeEst < estMin";
+
+    db.open();
+    queryModel->setQuery(sqlCommand);
+    db.close();
+
+    ui->check_list_produtos_abaixo->clear();
+
+    while(queryModel->query().next())
+    {
+        QString produto = "Código = " + queryModel->query().value(0).toString() + " ~ Descrição: " + queryModel->query().value(1).toString();
+
+        ui->check_list_produtos_abaixo->addItem(produto);
+    }
+}
+
+void MainWindow::on_check_entreDatasButton_clicked()
+{
+    QDate final = ui->check_data_final->date();
+    QDate inicio = ui->check_data_inicio->date();
+
+    if (inicio > final)
+    {
+        ui->check_intervalo_feedback->setText("Intervalo invalido.");
+    }
+    else
+    {
+        ui->check_intervalo_feedback->setText("");
+
+        QString finalString = QString().setNum(final.year()) + "-" + QString().setNum(final.month()) + "-" + QString().setNum(final.day());
+        QString inicioString = QString().setNum(inicio.year()) + "-" + QString().setNum(inicio.month()) + "-" + QString().setNum(inicio.day());
+
+        QString sqlCommand = "SELECT * FROM vendas WHERE dataVenda <= ";
+        sqlCommand += "\"" + finalString + "\"";
+        sqlCommand += " AND dataVenda >= ";
+        sqlCommand += "\"" + inicioString + "\"";
+
+        db.open();
+        queryModel->setQuery(sqlCommand);
+        db.close();
+
+        ui->check_list_intervalo->clear();
+
+        while(queryModel->query().next())
+        {
+            QString venda = "Número = " + queryModel->query().value(0).toString();
+
+            ui->check_list_intervalo->addItem(venda);
+        }
+    }
+}

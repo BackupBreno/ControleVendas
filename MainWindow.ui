@@ -111,7 +111,7 @@
      <string>Nome</string>
     </property>
    </widget>
-   <widget class="QListWidget" name="listWidgetVendas">
+   <widget class="QListWidget" name="check_list_intervalo">
     <property name="geometry">
      <rect>
       <x>980</x>
@@ -312,7 +312,7 @@
      <string>Consultar</string>
     </property>
    </widget>
-   <widget class="QPushButton" name="consultarTotalVendas">
+   <widget class="QPushButton" name="check_entreDatasButton">
     <property name="geometry">
      <rect>
       <x>1080</x>
@@ -664,7 +664,7 @@
      <string>Código do Produto:</string>
     </property>
    </widget>
-   <widget class="QLabel" name="consultarFeedback">
+   <widget class="QLabel" name="check_intervalo_feedback">
     <property name="geometry">
      <rect>
       <x>1050</x>
@@ -752,7 +752,7 @@
      <enum>Qt::Vertical</enum>
     </property>
    </widget>
-   <widget class="QDateEdit" name="consultarDataFinal">
+   <widget class="QDateEdit" name="check_data_final">
     <property name="geometry">
      <rect>
       <x>1139</x>
@@ -1039,7 +1039,7 @@
      <string>Quantidade Estoque</string>
     </property>
    </widget>
-   <widget class="QPushButton" name="consultarProdutosAbaixo">
+   <widget class="QPushButton" name="check_produtos_abaixo_button">
     <property name="geometry">
      <rect>
       <x>1010</x>
@@ -1185,7 +1185,7 @@
      <string>Vencimento:</string>
     </property>
    </widget>
-   <widget class="QDateEdit" name="consultarDataInicial">
+   <widget class="QDateEdit" name="check_data_inicio">
     <property name="geometry">
      <rect>
       <x>1000</x>
@@ -1422,7 +1422,7 @@
      <number>99999</number>
     </property>
    </widget>
-   <widget class="QListWidget" name="listWidget">
+   <widget class="QListWidget" name="check_list_produtos_abaixo">
     <property name="geometry">
      <rect>
       <x>980</x>

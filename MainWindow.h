@@ -64,6 +64,10 @@ private slots:
 
     void on_nota_finalizarButton_clicked();
 
+    void on_check_produtos_abaixo_button_clicked();
+
+    void on_check_entreDatasButton_clicked();
+
 private:
     Ui::MainWindow *ui;
 
