@@ -107,10 +107,12 @@ void MainWindow::on_produto_cadastro_cadastrarButton_clicked()
         sqlCommand += QString().setNum(estoqueMin) + ")";
         queryModel->setQuery(sqlCommand);
 
+        query = queryModel->query();
+
         queryModel->setQuery(endTransaction);
         db.close();
 
-        QString error = queryModel->query().lastError().text();
+        QString error = query.lastError().text();
 
         std::cout << "Erro: \"" + error.toStdString() + "\"\n";
 
