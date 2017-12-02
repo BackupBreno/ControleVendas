@@ -144,10 +144,12 @@ void MainWindow::on_produto_consulta_consultarButton_clicked()
     sqlCommand += QString().setNum(cod);
     queryModel->setQuery(sqlCommand);
 
+    query = queryModel->query();
+
     queryModel->setQuery(endTransaction);
     db.close();
 
-    if (!queryModel->query().next())
+    if (!query.next())
     {
         ui->produto_consulta_descricao->setText("Código invalido!");
         ui->produto_consulta_valCompra->setText("Valor Compra");
@@ -157,11 +159,11 @@ void MainWindow::on_produto_consulta_consultarButton_clicked()
     }
     else
     {
-        ui->produto_consulta_descricao->setText(queryModel->query().value(1).toString());
-        ui->produto_consulta_valCompra->setText(queryModel->query().value(2).toString());
-        ui->produto_consulta_valVenda->setText(queryModel->query().value(3).toString());
-        ui->produto_consulta_estoque->setText(queryModel->query().value(4).toString());
-        ui->produto_consulta_estMin->setText(queryModel->query().value(5).toString());
+        ui->produto_consulta_descricao->setText(query.value(1).toString());
+        ui->produto_consulta_valCompra->setText(query.value(2).toString());
+        ui->produto_consulta_valVenda->setText(query.value(3).toString());
+        ui->produto_consulta_estoque->setText(query.value(4).toString());
+        ui->produto_consulta_estMin->setText(query.value(5).toString());
     }
 }
 
@@ -176,10 +178,12 @@ void MainWindow::on_produto_excluit_excluirButton_clicked()
     sqlCommand += QString().setNum(cod);
     queryModel->setQuery(sqlCommand);
 
+    query = queryModel->query();
+
     queryModel->setQuery(endTransaction);
     db.close();
 
-    if (queryModel->query().next())
+    if (query.next())
     {  
         db.open();
         queryModel->setQuery(beginTransaction);
@@ -205,18 +209,19 @@ void MainWindow::on_produto_alterar_consultarButton_clicked()
 
     int cod = ui->produto_alterar_cod->value();
 
+    db.open();
+    queryModel->setQuery(beginTransaction);
+
     QString sqlCommand = "SELECT * FROM produtos WHERE codigo = ";
     sqlCommand += QString().setNum(cod);
-
-    db.open();
-
     queryModel->setQuery(sqlCommand);
 
-    std::cout << queryModel->query().lastError().text().toStdString() << std::endl;
+    query = queryModel->query();
 
+    queryModel->setQuery(endTransaction);
     db.close();
 
-    if (!queryModel->query().next())
+    if (!query.next())
     {
         ui->produto_alterar_descricao->setText("Código invalido!");
         ui->produto_alterar_valCompra->setValue(0);
@@ -226,11 +231,11 @@ void MainWindow::on_produto_alterar_consultarButton_clicked()
     }
     else
     {
-        ui->produto_alterar_descricao->setText(queryModel->query().value(1).toString());
-        ui->produto_alterar_valCompra->setValue(queryModel->query().value(2).toFloat());
-        ui->produto_alterar_valVenda->setValue(queryModel->query().value(3).toFloat());
-        ui->produto_alterar_estoque->setValue(queryModel->query().value(4).toInt());
-        ui->produto_alterar_estMin->setValue(queryModel->query().value(5).toInt());
+        ui->produto_alterar_descricao->setText(query.value(1).toString());
+        ui->produto_alterar_valCompra->setValue(query.value(2).toFloat());
+        ui->produto_alterar_valVenda->setValue(query.value(3).toFloat());
+        ui->produto_alterar_estoque->setValue(query.value(4).toInt());
+        ui->produto_alterar_estMin->setValue(query.value(5).toInt());
 
         enableProdutoAlterar();
     }
@@ -255,54 +260,40 @@ void MainWindow::on_produto_alterar_alterarButton_clicked()
 
         int estoqueMin = ui->produto_alterar_estMin->value();
 
+        db.open();
+        queryModel->setQuery(beginTransaction);
+
         QString sqlCommand = "UPDATE produtos SET descricao = ";
         sqlCommand += "\"" + descricao + "\"";
         sqlCommand += " WHERE codigo = ";
         sqlCommand += QString().setNum(cod);
-
-        db.open();
         queryModel->setQuery(sqlCommand);
-        std::cout << queryModel->query().lastError().text().toStdString() << std::endl;
-        db.close();
 
         sqlCommand = "UPDATE produtos SET valorCompra = ";
         sqlCommand += QString().setNum(valCompra);
         sqlCommand += " WHERE codigo = ";
         sqlCommand += QString().setNum(cod);
-
-        db.open();
         queryModel->setQuery(sqlCommand);
-        std::cout << queryModel->query().lastError().text().toStdString() << std::endl;
-        db.close();
 
         sqlCommand = "UPDATE produtos SET valorVenda = ";
         sqlCommand += QString().setNum(valVenda);
         sqlCommand += " WHERE codigo = ";
         sqlCommand += QString().setNum(cod);
-
-        db.open();
         queryModel->setQuery(sqlCommand);
-        std::cout << queryModel->query().lastError().text().toStdString() << std::endl;
-        db.close();
 
         sqlCommand = "UPDATE produtos SET quantidadeEst = ";
         sqlCommand += QString().setNum(estoque);
         sqlCommand += " WHERE codigo = ";
         sqlCommand += QString().setNum(cod);
-
-        db.open();
         queryModel->setQuery(sqlCommand);
-        std::cout << queryModel->query().lastError().text().toStdString() << std::endl;
-        db.close();
 
         sqlCommand = "UPDATE produtos SET estMin = ";
         sqlCommand += QString().setNum(estoqueMin);
         sqlCommand += " WHERE codigo = ";
         sqlCommand += QString().setNum(cod);
-
-        db.open();
         queryModel->setQuery(sqlCommand);
-        std::cout << queryModel->query().lastError().text().toStdString() << std::endl;
+
+        queryModel->setQuery(endTransaction);
         db.close();
 
         disableProdutoAlterar();
@@ -355,25 +346,22 @@ void MainWindow::on_cliente_cadastro_cadastrarButton_clicked()
 
     if (nome.length() > 0 && endereco.length() > 0)
     {
+        db.open();
+        queryModel->setQuery(beginTransaction);
+
         sqlCommand = "INSERT INTO clientes VALUES (";
         sqlCommand += QString().setNum(cod) + ", ";
         sqlCommand += "\"" + nome + "\", ";
         sqlCommand += "\"" + endereco + "\", ";
         sqlCommand += "\"" + telefone + "\")";
-
-        std::cout << "SQL: " << sqlCommand.toStdString() << std::endl;
-
-        db.open();
-
         queryModel->setQuery(sqlCommand);
 
-        std::cout << queryModel->query().lastError().text().toStdString() << std::endl;
+        query = queryModel->query();
 
+        queryModel->setQuery(endTransaction);
         db.close();
 
-        QString error = queryModel->query().lastError().text();
-
-        std::cout << "Erro: \"" + error.toStdString() + "\"\n";
+        QString error = query.lastError().text();
 
         if (error == " ")
         {
@@ -382,8 +370,6 @@ void MainWindow::on_cliente_cadastro_cadastrarButton_clicked()
         else
         {
             ui->cliente_cadastro_feedback->setText("Error no cadastro");
-
-            std::cout << error.toStdString() << std::endl;
         }
     }
     else
@@ -394,22 +380,21 @@ void MainWindow::on_cliente_cadastro_cadastrarButton_clicked()
 
 void MainWindow::on_cliente_consulta_consultarButton_clicked()
 {
-    std::cout << "C CS" << std::endl;
-
     int cod = ui->cliente_consulta_cod->value();
+
+    db.open();
+    queryModel->setQuery(beginTransaction);
 
     QString sqlCommand = "SELECT * FROM clientes WHERE codigo = ";
     sqlCommand += QString().setNum(cod);
-
-    db.open();
-
     queryModel->setQuery(sqlCommand);
 
-    std::cout << queryModel->query().lastError().text().toStdString() << std::endl;
+    query = queryModel->query();
 
+    queryModel->setQuery(endTransaction);
     db.close();
 
-    if (!queryModel->query().next())
+    if (!query.next())
     {
         ui->cliente_consulta_nome->setText("Cliente não encontrado");
         ui->cliente_consulta_endereco->setText("Endereco");
@@ -417,36 +402,40 @@ void MainWindow::on_cliente_consulta_consultarButton_clicked()
     }
     else
     {
-        ui->cliente_consulta_nome->setText(queryModel->query().value(1).toString());
-        ui->cliente_consulta_endereco->setText(queryModel->query().value(2).toString());
-        ui->cliente_consulta_telefone->setText(queryModel->query().value(3).toString());
+        ui->cliente_consulta_nome->setText(query.value(1).toString());
+        ui->cliente_consulta_endereco->setText(query.value(2).toString());
+        ui->cliente_consulta_telefone->setText(query.value(3).toString());
     }
 }
 
 void MainWindow::on_cliente_excluir_excluirButton_clicked()
 {
-    std::cout << "C X" << std::endl;
-
     int cod = ui->cliente_excluir_cod->value();
+
+    db.open();
+    queryModel->setQuery(beginTransaction);
 
     QString sqlCommand = "SELECT * FROM clientes WHERE codigo = ";
     sqlCommand += QString().setNum(cod);
-
-    db.open();
     queryModel->setQuery(sqlCommand);
+
+    query = queryModel->query();
+
+    queryModel->setQuery(endTransaction);
     db.close();
 
-    if (queryModel->query().next())
+    if (query.next())
     {
+        db.open();
+        queryModel->setQuery(beginTransaction);
+
         sqlCommand = "DELETE FROM clientes WHERE codigo = ";
         sqlCommand += QString().setNum(cod);
-
-        db.open();
-
         queryModel->setQuery(sqlCommand);
 
-        std::cout << queryModel->query().lastError().text().toStdString() << std::endl;
+        query = queryModel->query();
 
+        queryModel->setQuery(endTransaction);
         db.close();
 
         ui->cliente_excluir_feedback->setText("Cliente excluido.");
@@ -463,18 +452,19 @@ void MainWindow::on_cliente_alterar_consultarButton_clicked()
 
     int cod = ui->cliente_alterar_cod->value();
 
+    db.open();
+    queryModel->setQuery(beginTransaction);
+
     QString sqlCommand = "SELECT * FROM clientes WHERE codigo = ";
     sqlCommand += QString().setNum(cod);
-
-    db.open();
-
     queryModel->setQuery(sqlCommand);
 
-    std::cout << queryModel->query().lastError().text().toStdString() << std::endl;
+    query = queryModel->query();
 
+    queryModel->setQuery(endTransaction);
     db.close();
 
-    if (!queryModel->query().next())
+    if (!query.next())
     {
         ui->cliente_alterar_nome->setText("Cliente não encontrado");
         ui->cliente_alterar_endereco->setText("Endereco");
@@ -482,9 +472,9 @@ void MainWindow::on_cliente_alterar_consultarButton_clicked()
     }
     else
     {
-        ui->cliente_alterar_nome->setText(queryModel->query().value(1).toString());
-        ui->cliente_alterar_endereco->setText(queryModel->query().value(2).toString());
-        ui->cliente_alterar_telefone->setText(queryModel->query().value(3).toString());
+        ui->cliente_alterar_nome->setText(query.value(1).toString());
+        ui->cliente_alterar_endereco->setText(query.value(2).toString());
+        ui->cliente_alterar_telefone->setText(query.value(3).toString());
 
         enableClienteAlterar();
     }
@@ -504,34 +494,28 @@ void MainWindow::on_cliente_alterar_alterarButton_clicked()
     {
         int cod = ui->cliente_alterar_cod->value();
 
+        db.open();
+        queryModel->setQuery(beginTransaction);
+
         QString sqlCommand = "UPDATE clientes SET nome = ";
         sqlCommand += "\"" + nome + "\"";
         sqlCommand += " WHERE codigo = ";
         sqlCommand += QString().setNum(cod);
-
-        db.open();
         queryModel->setQuery(sqlCommand);
-        std::cout << queryModel->query().lastError().text().toStdString() << std::endl;
-        db.close();
 
         sqlCommand = "UPDATE clientes SET endereco = ";
         sqlCommand += "\"" + endereco + "\"";
         sqlCommand += " WHERE codigo = ";
         sqlCommand += QString().setNum(cod);
-
-        db.open();
         queryModel->setQuery(sqlCommand);
-        std::cout << queryModel->query().lastError().text().toStdString() << std::endl;
-        db.close();
 
         sqlCommand = "UPDATE clientes SET telefone = ";
         sqlCommand += "\"" + telefone + "\"";
         sqlCommand += " WHERE codigo = ";
         sqlCommand += QString().setNum(cod);
-
-        db.open();
         queryModel->setQuery(sqlCommand);
-        std::cout << queryModel->query().lastError().text().toStdString() << std::endl;
+
+        queryModel->setQuery(endTransaction);
         db.close();
 
         disableClienteAlterar();
@@ -586,22 +570,25 @@ void MainWindow::on_nota_gerarNotaButton_clicked()
 
         QString isPrazoStirng = (isPrazo ? "true" : "false");
 
+        db.open();
+        queryModel->setQuery(beginTransaction);
+
         sqlCommand = "INSERT INTO vendas VALUES (";
         sqlCommand += QString().setNum(cod) + ", ";
         sqlCommand += "\"" + vendaString + "\", ";
         sqlCommand += "\"" + vencimentoString + "\", ";
         sqlCommand += isPrazoStirng + ", ";
         sqlCommand += QString().setNum(codCliente) + ")";
-
-        std::cout << sqlCommand.toStdString() << std::endl;
-
-        db.open();
         queryModel->setQuery(sqlCommand);
+
+        query = queryModel->query();
+
+        queryModel->setQuery(endTransaction);
         db.close();
 
         numVenda = cod;
 
-        QString error = queryModel->query().lastError().text();
+        QString error = query.lastError().text();
 
         if (error == " ")
         {
@@ -633,20 +620,25 @@ void MainWindow::on_nota_gerarNotaButton_clicked()
 
         QString isPrazoString = (isPrazo ? "true" : "false");
 
+        db.open();
+        queryModel->setQuery(beginTransaction);
+
         sqlCommand = "INSERT INTO vendas VALUES (";
         sqlCommand += QString().setNum(cod) + ", ";
         sqlCommand += "\"" + dataString + "\", ";
         sqlCommand += "\"" + dataString + "\", ";
         sqlCommand += isPrazoString + ", ";
         sqlCommand += QString().setNum(codCliente) + ")";
-
-        db.open();
         queryModel->setQuery(sqlCommand);
+
+        query = queryModel->query();
+
+        queryModel->setQuery(endTransaction);
         db.close();
 
         numVenda = cod;
 
-        QString error = queryModel->query().lastError().text();
+        QString error = query.lastError().text();
 
         if (error == " ")
         {
@@ -687,20 +679,25 @@ void MainWindow::on_nota_produto_consultar_clicked()
     {
         int codProduto = ui->nota_produto_cod->value();
 
+        db.open();
+        queryModel->setQuery(beginTransaction);
+
         QString sqlCommand = "SELECT * FROM produtos WHERE codigo = ";
         sqlCommand += QString().setNum(codProduto);
-
-        db.open();
         queryModel->setQuery(sqlCommand);
+
+        query = queryModel->query();
+
+        queryModel->setQuery(endTransaction);
         db.close();
 
-        if (!queryModel->query().next())
+        if (!query.next())
         {
             ui->nota_produto_descricao->setText("Codigo invalido");
         }
         else
         {
-            ui->nota_produto_descricao->setText(queryModel->query().value(1).toString());
+            ui->nota_produto_descricao->setText(query.value(1).toString());
 
             ui->nota_produto_cod->setEnabled(false);
             ui->nota_produto_cod->setEnabled(false);
@@ -735,17 +732,22 @@ void MainWindow::on_nota_produto_addButton_clicked()
 
     float valPago = ui->nota_produto_valPago->value();
 
+    db.open();
+    queryModel->setQuery(beginTransaction);
+
     QString sqlCommand = "INSERT INTO itensvendidos VALUES (";
     sqlCommand += QString().setNum(numVenda) + ", ";
     sqlCommand += QString().setNum(codProduto) + ", ";
     sqlCommand += QString().setNum(qtdDesejada) + ", ";
     sqlCommand += QString().setNum(valPago) + ")";
-
-    db.open();
     queryModel->setQuery(sqlCommand);
+
+    query = queryModel->query();
+
+    queryModel->setQuery(endTransaction);
     db.close();
 
-    QString error = queryModel->query().lastError().text();
+    QString error = query.lastError().text();
 
     if (error == " ")
     {
@@ -813,17 +815,22 @@ void MainWindow::on_nota_finalizarButton_clicked()
 // Check Geral
 void MainWindow::on_check_produtos_abaixo_button_clicked()
 {
-    QString sqlCommand = "SELECT * FROM produtos WHERE quantidadeEst < estMin";
-
     db.open();
+    queryModel->setQuery(beginTransaction);
+
+    QString sqlCommand = "SELECT * FROM produtos WHERE quantidadeEst < estMin";
     queryModel->setQuery(sqlCommand);
+
+    query = queryModel->query();
+
+    queryModel->setQuery(endTransaction);
     db.close();
 
     ui->check_list_produtos_abaixo->clear();
 
-    while(queryModel->query().next())
+    while(query.next())
     {
-        QString produto = "Código = " + queryModel->query().value(0).toString() + " ~ Descrição: " + queryModel->query().value(1).toString();
+        QString produto = "Código = " + query.value(0).toString() + " ~ Descrição: " + query.value(1).toString();
 
         ui->check_list_produtos_abaixo->addItem(produto);
     }
@@ -845,22 +852,25 @@ void MainWindow::on_check_entreDatasButton_clicked()
         QString finalString = QString().setNum(final.year()) + "-" + QString().setNum(final.month()) + "-" + QString().setNum(final.day());
         QString inicioString = QString().setNum(inicio.year()) + "-" + QString().setNum(inicio.month()) + "-" + QString().setNum(inicio.day());
 
+        db.open();
+        queryModel->setQuery(beginTransaction);
+
         QString sqlCommand = "SELECT * FROM vendas WHERE dataVenda <= ";
         sqlCommand += "\"" + finalString + "\"";
         sqlCommand += " AND dataVenda >= ";
         sqlCommand += "\"" + inicioString + "\"";
-
-        db.open();
-        db.transaction();
         queryModel->setQuery(sqlCommand);
-        db.commit();
+
+        query = queryModel->query();
+
+        queryModel->setQuery(endTransaction);
         db.close();
 
         ui->check_list_intervalo->clear();
 
-        while(queryModel->query().next())
+        while(query.next())
         {
-            QString venda = "Número = " + queryModel->query().value(0).toString();
+            QString venda = "Número = " + query.value(0).toString();
 
             ui->check_list_intervalo->addItem(venda);
         }

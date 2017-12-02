@@ -75,6 +75,7 @@ private:
 
     QSqlDatabase db;
     QSqlQueryModel *queryModel;
+    QSqlQuery query;
 
     QString beginTransaction;
     QString endTransaction;
