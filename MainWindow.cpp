@@ -194,10 +194,23 @@ void MainWindow::on_produto_excluit_excluirButton_clicked()
         sqlCommand += QString().setNum(cod);
         queryModel->setQuery(sqlCommand);
 
+        query = queryModel->query();
+
         queryModel->setQuery(endTransaction);
         db.close();
 
-        ui->produto_excluir_feedback->setText("Produto excluido.");
+        QString error = query.lastError().text();
+
+        if (error == " ")
+        {
+            ui->produto_excluir_feedback->setText("Produto excluido.");
+        }
+        else
+        {
+            ui->produto_excluir_feedback->setText("Falha ao excluir produto.");
+
+            std::cout << error.toStdString() << std::endl;
+        }
     }
     else
     {
@@ -440,7 +453,18 @@ void MainWindow::on_cliente_excluir_excluirButton_clicked()
         queryModel->setQuery(endTransaction);
         db.close();
 
-        ui->cliente_excluir_feedback->setText("Cliente excluido.");
+        QString error = query.lastError().text();
+
+        if (error == " ")
+        {
+            ui->cliente_excluir_feedback->setText("Cliente excluido.");
+        }
+        else
+        {
+            ui->cliente_excluir_feedback->setText("Falha ao excluir cliente.");
+
+            std::cout << error.toStdString() << std::endl;
+        }
     }
     else
     {
